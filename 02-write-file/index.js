@@ -12,7 +12,7 @@ fs.appendFile(filePath, '', err => {
 stdout.write('введите текст\n');
 stdin.on('data',  data => {  
   let addText = data.toString();
-  addText = addText.substring(0, addText.length - 2)
+  addText = addText.substring(0, addText.length - 2);
   if (addText === 'exit') {
     process.exit();
   }
