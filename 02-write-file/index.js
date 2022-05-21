@@ -3,24 +3,22 @@ const path = require('path');
 const {stdin,stdout} = process;
 const filePath = (path.join(__dirname, 'text.txt'));
 
-fs.appendFile(filePath, '', err => {
-  if (err) {
-    throw err;
-  }
+fs.appendFile(filePath, '', (err) => {
+  if (err) {throw err;}
 });
 
 stdout.write('введите текст\n');
-stdin.on('data',  data => {  
+
+stdin.on('data',  (data) => {  
   let addText = data.toString();
   addText = addText.substring(0, addText.length - 2);
   if (addText === 'exit') {
     process.exit();
   }
-  fs.appendFile(filePath, data, err => {
-    if (err) {
-      throw err;
-    }
+  fs.appendFile(filePath, data, (err) => {
+    if (err) {throw err;}
   });
   stdout.write('введите текст\n'); 
 });
+
 process.on('exit', () => stdout.write('Удачи!'));
