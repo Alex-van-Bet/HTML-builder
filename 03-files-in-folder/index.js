@@ -25,10 +25,7 @@ function readFolder(filePath) {
     for (let i = 0; i < files.length; i++) {
       if (files[i].isFile()) {
         filesData(files[i], filePath);
-      } else {
-        let newfilePath = (path.join(filePath, 'image.jpg'));
-        readFolder(newfilePath);
-      }
+      } 
     }
 
   });

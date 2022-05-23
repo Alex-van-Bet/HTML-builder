@@ -3,6 +3,13 @@ const path = require('path');
 const {stdin,stdout} = process;
 const filePath = (path.join(__dirname, 'text.txt'));
 
+
+process.on('exit', () => stdout.write('Удачи!'));
+
+process.on('SIGINT', () => {
+  process.exit();
+});
+
 fs.appendFile(filePath, '', (err) => {
   if (err) {throw err;}
 });
@@ -21,4 +28,3 @@ stdin.on('data',  (data) => {
   stdout.write('введите текст\n'); 
 });
 
-process.on('exit', () => stdout.write('Удачи!'));
