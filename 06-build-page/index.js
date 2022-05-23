@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
+const { unlink, readdir, writeFile, rm, mkdir } = require('fs/promises');
 let currentFolder = (path.join(__dirname)); /* текущая папка */
 let projectDist = (path.join(__dirname, 'project-dist')); /* папка проекта */
 let assets = (path.join(__dirname, 'assets')); /* папка с картинками */
@@ -27,19 +28,16 @@ function createStyle() {
   fs.readdir(styles, {withFileTypes: true}, (err, files) => {
     if (err) {throw err;}
 
-    for (let i = 0; i < files.length; i++) {
+
+    for (let i = files.length - 1; i >= 0; i--) {
       let extension = path.parse(files[i].name).ext;
       if (extension === '.css') {
 
-        if (files[i].name === 'footer.css') {
+        
 
-          setTimeout(() => {
-            addCss(files[i].name);
-          }, 200);
+        addCss(files[i].name);
 
-        } else {
-          addCss(files[i].name);
-        }
+      
 
       }
 
@@ -140,49 +138,39 @@ function addhtml() {
 
 
 /* создание папки project-dist, запуск сборки */
-function createFolder() {
+async function createFolder() {
+
+  await rm(projectDist, {recursive: true, force: true,}, (err) => {
+    if (err) {throw err;}
+  });
+
+  await mkdir(projectDist, (err) => {
+    if (err) {throw err;}
+  });
+
+
+
   fs.readdir(currentFolder, {withFileTypes: true}, (err, files) => {
     if (err) {throw err;}
 
-    for (let i = 0; i < files.length; i++) {
+    fs.mkdir(assetsCopy, (err) => {
+      if (err) {throw err;}
+      copyFolderImg(assets, assetsCopy);
+    });
 
-      if ((!files[i].isFile()) && files[i].name === 'project-dist') {
-        fs.rm(projectDist, {recursive: true}, (err) => {
-          if (err) {throw err;}
-        });
+    fs.writeFile(path.join(projectDist, 'style.css'), '', (err) => {
+      if (err) {throw err;}
+      createStyle();
+    });
 
-      }
-
-    }
-    setTimeout(() => {
-
-      fs.mkdir(projectDist, (err) => {
+    fs.readFile(path.join(currentFolder, 'template.html'), (err, data) => {
+      if (err) {throw err;}
+      fs.writeFile(path.join(projectDist, 'index.html'), data, (err) => {
         if (err) {throw err;}
+        addhtml();
       });
+    });
 
-    }, 200);
-
-    setTimeout(() => {
-
-      fs.mkdir(assetsCopy, (err) => {
-        if (err) {throw err;}
-        copyFolderImg(assets, assetsCopy);
-      });
-
-      fs.writeFile(path.join(projectDist, 'style.css'), '', (err) => {
-        if (err) {throw err;}
-        createStyle();
-      });
-
-      fs.readFile(path.join(currentFolder, 'template.html'), (err, data) => {
-        if (err) {throw err;}
-        fs.writeFile(path.join(projectDist, 'index.html'), data, (err) => {
-          if (err) {throw err;}
-          addhtml();
-        });
-      });
-
-    }, 300);
 
   });
 
