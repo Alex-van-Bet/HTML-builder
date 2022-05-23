@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const { unlink, readdir, writeFile, rm, mkdir } = require('fs/promises');
+const { rm, mkdir } = require('fs/promises');
 let currentFolder = (path.join(__dirname)); /* текущая папка */
 let projectDist = (path.join(__dirname, 'project-dist')); /* папка проекта */
 let assets = (path.join(__dirname, 'assets')); /* папка с картинками */
